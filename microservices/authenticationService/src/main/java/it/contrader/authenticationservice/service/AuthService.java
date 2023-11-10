@@ -24,16 +24,19 @@ public class AuthService {
             return rolesString.stream().map(role -> {
                 if (role.equalsIgnoreCase("admin")) {
                     return roleRepository.findByRole(Role.ERole.ROLE_ADMIN)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        .orElse(roleRepository.save(new Role((long) 1, Role.ERole.ROLE_ADMIN)));
+//                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 } else {
                     return roleRepository.findByRole(Role.ERole.ROLE_USER)
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            .orElse(roleRepository.save(new Role((long) 2, Role.ERole.ROLE_ADMIN)));
+//                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 }
             }).collect(Collectors.toSet());
         } else {
             Set<Role> roles = new HashSet<>();
             roles.add(roleRepository.findByRole(Role.ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
+                    .orElse(roleRepository.save(new Role((long) 2, Role.ERole.ROLE_ADMIN))));
+//                .orElseThrow(() -> new RuntimeException("Error: Role is not found.")));
             return roles;
         }
     }

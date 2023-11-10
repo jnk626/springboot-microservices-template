@@ -1,8 +1,9 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: anagservice
-  server:
-    port: 8082
   datasource:
     url: jdbc:mysql://localhost:3306/anagrafica?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
@@ -12,11 +13,14 @@ spring:
     stream:
       bindings:
         input-in-0:
-          destination: myInputQueue
+          destination: anagraphics
           binder: rabbitmq
       binders:
         rabbitmq:
           type: rabbit
+          port: "5672"
+          networks:
+            - default
   # JPA settings
   jpa:
     show-sql: true
@@ -33,7 +37,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8772/eureka/
 # App Properties
 contrader:
   app:

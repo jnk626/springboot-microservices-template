@@ -92,7 +92,7 @@ public class UserService {
 
         try {
             signUpRequest.getAnagrafica().setUserId(savedUser.getId());
-            anagraficaFeignClient.register(signUpRequest.getAnagrafica());
+//            anagraficaFeignClient.register(signUpRequest.getAnagrafica());
         } catch (FeignException e) {
             throw new CustomFeignException("Errore durante la registrazione dell'anagrafica", e);
         }
