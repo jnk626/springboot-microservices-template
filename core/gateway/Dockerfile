@@ -2,7 +2,7 @@
 FROM openjdk:11
 
 # Copia il file JAR del tuo microservizio nel container
-COPY /gateway/target/gateway.jar app.jar
+COPY target/gateway.jar app.jar
 
 # Espone la porta su cui il tuo microservizio sarà in ascolto
 EXPOSE 8080

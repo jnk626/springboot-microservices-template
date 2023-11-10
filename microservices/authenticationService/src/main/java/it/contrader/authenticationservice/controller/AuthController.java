@@ -7,6 +7,7 @@ import it.contrader.authenticationservice.dto.MessageResponse;
 import it.contrader.authenticationservice.dto.SignupDTO;
 import it.contrader.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StreamBridge streamBridge;
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok()
@@ -30,6 +34,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpRequest) {
         try {
             userService.registerUser(signUpRequest);
+            streamBridge.send("output-to-0", signUpRequest.getAnagrafica());
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (UsernameAlreadyInUseException | EmailAlreadyInUseException ex) {
             return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));

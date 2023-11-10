@@ -7,8 +7,8 @@ x-common-variables: &env
 services:
   eureka:
     build:
-      context: ./
-      dockerfile: ./eureka/Dockerfile
+      context: ./eureka
+      dockerfile: Dockerfile
     image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/eureka:latest
     restart: always
     ports:
@@ -18,8 +18,8 @@ services:
 
   gateway:
     build:
-      context: ./
-      dockerfile: ./gateway/Dockerfile
+      context: ./gateway
+      dockerfile: Dockerfile
     image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/gateway:latest
     restart: always
     depends_on:

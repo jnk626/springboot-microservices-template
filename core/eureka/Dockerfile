@@ -2,7 +2,7 @@
 FROM openjdk:11
 
 # Copia il file JAR del tuo microservizio nel container
-COPY /eureka/target/eureka.jar app.jar
+COPY target/eureka.jar app.jar
 
 # Espone la porta su cui il tuo microservizio sarà in ascolto
 EXPOSE 8761

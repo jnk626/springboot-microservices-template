@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: anagservice
+  server:
+    port: 8082
+  datasource:
+    url: jdbc:mysql://localhost:3306/anagrafica?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: root
+  # Spring Cloud Stream RabbitMQ bindings
+  cloud:
+    stream:
+      bindings:
+        input-in-0:
+          destination: myInputQueue
+          binder: rabbitmq
+      binders:
+        rabbitmq:
+          type: rabbit
+  # JPA settings
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+# Eureka settings
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+# App Properties
+contrader:
+  app:
+    jwtCookieName: contrader
+    jwtSecret: ascihabcoiacv987v89davahvbaiva98v9ava0svavibvais
+    jwtExpirationMs: 86400000
