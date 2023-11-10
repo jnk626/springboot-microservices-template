@@ -1,0 +1,45 @@
+version: '3.5'
+
+x-common-variables: &env
+  SPRING_PROFILES_ACTIVE: ${ENVIRONMENT}
+  EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://eureka:8761/eureka/
+
+services:
+  eureka:
+    build:
+      context: ./
+      dockerfile: ./eureka/Dockerfile
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/eureka:latest
+    restart: always
+    ports:
+      - "8772:8761"
+    networks:
+      - default
+
+  gateway:
+    build:
+      context: ./
+      dockerfile: ./gateway/Dockerfile
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/gateway:latest
+    restart: always
+    depends_on:
+      - eureka
+    ports:
+      - "8094:8080"
+    environment:
+      <<: *env
+    networks:
+      - default
+
+  rabbitmq3:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.12.7-management
+    hostname: rabbitmq3
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    networks:
+      - default
