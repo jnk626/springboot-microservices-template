@@ -1,3 +1,5 @@
+# for comments, check the anagraficaService application.yml
+
 server:
   port: 8081
 
@@ -12,6 +14,7 @@ spring:
   cloud:
     stream:
       bindings:
+        # out means that publishes in the destination
         output-out-0:
           destination: anagraphics
           binder: rabbitmq

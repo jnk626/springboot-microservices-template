@@ -1,9 +1,11 @@
+# this goes here, 'cause we're in local, otherwise...
 server:
   port: 8082
 
 spring:
   application:
     name: anagservice
+  # ... it can go here
   datasource:
     url: jdbc:mysql://localhost:3306/anagrafica?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
@@ -12,12 +14,14 @@ spring:
   cloud:
     stream:
       bindings:
+        # in means that consumes from the destination
         input-in-0:
           destination: anagraphics
           binder: rabbitmq
       binders:
         rabbitmq:
           type: rabbit
+          # needed because the container is not on the same compose file
           port: "5672"
           networks:
             - default
@@ -37,6 +41,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
+      # necessary, cause we're in local, not in containerized environment, so we use the local port for eureka
       defaultZone: http://localhost:8772/eureka/
 # App Properties
 contrader:

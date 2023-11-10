@@ -15,6 +15,10 @@ public class ConsumerService {
     private AnagraficaService service;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerService.class);
 
+    // using a modern functional approach, the Consumer is a function that acts whenever the payload of a certain
+    // queue matches the class specified
+    // extra: it always returns void
+    // TODO requires further study
     @Bean
     public Consumer<AnagraficaDTO> input() {
         return anagraficaDTO -> {

@@ -34,6 +34,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpRequest) {
         try {
             userService.registerUser(signUpRequest);
+            // bindingName must match the application.yml property
             streamBridge.send("output-out-0", signUpRequest.getAnagrafica());
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (UsernameAlreadyInUseException | EmailAlreadyInUseException ex) {

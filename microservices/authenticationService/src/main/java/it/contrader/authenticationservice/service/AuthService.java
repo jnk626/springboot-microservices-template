@@ -25,6 +25,7 @@ public class AuthService {
                 if (role.equalsIgnoreCase("admin")) {
                     return roleRepository.findByRole(Role.ERole.ROLE_ADMIN)
                         .orElse(roleRepository.save(new Role((long) 1, Role.ERole.ROLE_ADMIN)));
+                    //necessary, 'cause it doesn't create a missing role otherwise
 //                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 } else {
                     return roleRepository.findByRole(Role.ERole.ROLE_USER)
