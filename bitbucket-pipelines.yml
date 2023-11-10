@@ -1,0 +1,41 @@
+pipelines:
+  default:
+    - step:
+        name: build
+        image: maven:3.8.4-openjdk-11
+        services:
+          - docker
+        caches:
+          - maven
+        artifacts:
+          - "eureka/target/**"
+          - "gateway/target/**"
+          - "authenticationService/target/**"
+        script:
+          - mvn -DDOCKER_GOAL=build -DDOCKER_REPOSITORY=$DOCKER_REPOSITORY -DDOCKER_USERNAME=$DOCKER_USERNAME -DDOCKER_PASSWORD=$DOCKER_PASSWORD -DskipTests clean verify package -U
+    - step:
+        image: docker/compose
+        name: Build and dockerize
+        services:
+          - docker
+        script:
+          - docker-compose build
+          - docker login $DOCKER_REPOSITORY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - docker push $DOCKER_REPOSITORY/formazione/microservizi/eureka
+          - docker push $DOCKER_REPOSITORY/formazione/microservizi/gateway
+          - docker push $DOCKER_REPOSITORY/formazione/microservizi/micro-authentication
+    - step:
+        image: atlassian/default-image:3
+        name: deploy
+        deployment: test
+        services:
+          - docker
+        script:
+          - docker login $DOCKER_REPOSITORY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - docker-compose -H ssh://$REMOTE_SERVER pull
+          - ENVIRONMENT=prod docker-compose -H ssh://$REMOTE_SERVER -p "formazione" up -d --no-build
+
+definitions:
+  services:
+    docker:
+      memory: 2048

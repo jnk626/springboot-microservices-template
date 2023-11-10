@@ -1,0 +1,87 @@
+version: '3.5'
+
+x-common-variables: &env
+  SPRING_PROFILES_ACTIVE: ${ENVIRONMENT}
+  EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://eureka:8761/eureka/
+
+
+services:
+  eureka:
+    build:
+      context: ./
+      dockerfile: ./eureka/Dockerfile
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/eureka:latest
+    restart: always
+    ports:
+      - "8772:8761"
+
+  gateway:
+    build:
+      context: ./
+      dockerfile: ./gateway/Dockerfile
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/gateway:latest
+    restart: always
+    depends_on:
+      - eureka
+    ports:
+      - "8094:8080"
+    environment:
+      <<: *env
+
+  micro-anagrafica:
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/micro-anagrafica:latest
+    restart: always
+    depends_on:
+      - db-anagrafica
+      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-anagrafica:3306/anagrafica?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false #collegato al network del db1
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      <<: *env
+
+  db-anagrafica:
+    image: mysql:8.0.28
+    ports:
+      - "3321:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: dbanagrafica
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp
+    volumes:
+      - db-anagrafica-data:/var/lib/mysql
+
+  micro-authentication:
+    build:
+      context: ./
+      dockerfile: ./authenticationService/Dockerfile
+    image: ${DOCKER_REPOSITORY:-local}/formazione/microservizi/micro-authentication:latest
+    restart: always
+    depends_on:
+      - db-authentication
+      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-authentication:3306/authentication?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false #collegato al network del db1
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      <<: *env
+
+  db-authentication:
+    image: mysql:8.0.28
+    ports:
+      - "3319:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: dbauth
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp
+    volumes:
+      - db-authentication-data:/var/lib/mysql
+
+# Volumes
+volumes:
+  db-anagrafica-data:
+  db-authentication-data:
