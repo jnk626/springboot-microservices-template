@@ -5,11 +5,9 @@ import it.contrader.authenticationservice.customException.UsernameAlreadyInUseEx
 import it.contrader.authenticationservice.dto.LoginDTO;
 import it.contrader.authenticationservice.dto.MessageResponse;
 import it.contrader.authenticationservice.dto.SignupDTO;
-import it.contrader.authenticationservice.security.JwtUtils;
 import it.contrader.authenticationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
