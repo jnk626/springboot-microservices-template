@@ -41,6 +41,7 @@ public class AuthController {
             userService.registerUser(signUpRequest);
             // bindingName must match the application.yml property of the binding
             streamBridge.send("output-out-0", signUpRequest.getAnagrafica(), MimeType.valueOf("application/json"));
+            streamBridge.send("output-out-1", signUpRequest.getEmail());
             LOGGER.info("Successfully sent: {}", signUpRequest.getAnagrafica());
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (UsernameAlreadyInUseException | EmailAlreadyInUseException ex) {

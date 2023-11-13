@@ -1,24 +1,20 @@
 # for comments, check the anagraficaService application.yml
 
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
-    name: authservice
+    name: notificationservice
   datasource:
-    url: jdbc:mysql://localhost:3306/authentication?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url: jdbc:mysql://localhost:3306/notification?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: root
     password: root
   # Spring Cloud Stream RabbitMQ bindings
   cloud:
     stream:
       bindings:
-        # out means that publishes in the destination
-        output-out-0:
-          destination: anagraphics
-          binder: rabbitmq
-        output-out-1:
+        mailInput-in-0:
           destination: notifications
           binder: rabbitmq
       binders:
@@ -50,3 +46,4 @@ contrader:
     jwtCookieName: contrader
     jwtSecret: ascihabcoiacv987v89davahvbaiva98v9ava0svavibvais
     jwtExpirationMs: 86400000
+
