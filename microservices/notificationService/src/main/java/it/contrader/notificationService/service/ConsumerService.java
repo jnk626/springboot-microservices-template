@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.Locale;
 import java.util.function.Consumer;
 
@@ -18,8 +19,13 @@ public class ConsumerService {
     @Bean
     public Consumer<MailInfoDTO> mailSender() {
         return info -> {
-            service.sendMail(info.getRecipientName(), info.getRecipientEmail(), Locale.ITALIAN);
-            LOGGER.warn("Received: {}", info);
+            try {
+                service.sendMail(info.getRecipientName(), info.getRecipientEmail(), Locale.ITALIAN);
+            } catch (MessagingException e) {
+                // TODO manage exception
+                throw new RuntimeException(e);
+            }
+            LOGGER.info("Received: {}", info);
         };
     }
 }
