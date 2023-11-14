@@ -15,7 +15,7 @@ spring:
     stream:
       bindings:
         # in means that consumes from the destination
-        input-in-0:
+        anagraphicsSaver-in-0:
           destination: anagraphics
           binder: rabbitmq
       binders:

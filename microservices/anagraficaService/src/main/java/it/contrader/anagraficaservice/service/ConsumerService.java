@@ -20,7 +20,7 @@ public class ConsumerService {
     // extra: it always returns void
     // TODO requires further study
     @Bean
-    public Consumer<AnagraficaDTO> input() {
+    public Consumer<AnagraficaDTO> anagraphicsSaver() {
         return anagraficaDTO -> {
             service.save(anagraficaDTO);
             LOGGER.info("Anagrafica salvata: {}", anagraficaDTO);

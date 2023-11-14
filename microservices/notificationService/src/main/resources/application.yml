@@ -14,7 +14,7 @@ spring:
   cloud:
     stream:
       bindings:
-        mailInput-in-0:
+        mailSender-in-0:
           destination: notifications
           binder: rabbitmq
       binders:
@@ -28,10 +28,26 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+  # File size limits
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  # Spring mail settings
+  mail:
+    host: ${mail.server.host}
+    port: ${mail.server.port}
+    username: ${mail.username}
+    password: ${mail.server.token}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          quitwait: false
+          starttls:
+            required: true
+            enable: true
+
 # Eureka settings
 eureka:
   client:

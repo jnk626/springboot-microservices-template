@@ -2,9 +2,7 @@ package it.contrader.authenticationservice.controller;
 
 import it.contrader.authenticationservice.customException.EmailAlreadyInUseException;
 import it.contrader.authenticationservice.customException.UsernameAlreadyInUseException;
-import it.contrader.authenticationservice.dto.LoginDTO;
-import it.contrader.authenticationservice.dto.MessageResponse;
-import it.contrader.authenticationservice.dto.SignupDTO;
+import it.contrader.authenticationservice.dto.*;
 import it.contrader.authenticationservice.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +37,16 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignupDTO signUpRequest) {
         try {
             userService.registerUser(signUpRequest);
+            AnagraficaDTO anagraphics = signUpRequest.getAnagrafica();
             // bindingName must match the application.yml property of the binding
-            streamBridge.send("output-out-0", signUpRequest.getAnagrafica(), MimeType.valueOf("application/json"));
-            streamBridge.send("output-out-1", signUpRequest.getEmail());
+            streamBridge.send("output-out-0", anagraphics);
+            MailInfoDTO infoDTO = MailInfoDTO.builder()
+                    .recipientName(anagraphics.getNome())
+                    .recipientEmail(signUpRequest.getEmail())
+                    .build();
+            streamBridge.send("output-out-1", infoDTO);
             LOGGER.info("Successfully sent: {}", signUpRequest.getAnagrafica());
+            LOGGER.info("Successfully sent: {}", infoDTO);
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (UsernameAlreadyInUseException | EmailAlreadyInUseException ex) {
             return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));
