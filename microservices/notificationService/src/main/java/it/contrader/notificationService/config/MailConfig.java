@@ -47,7 +47,8 @@ public class MailConfig {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.starttls.required", "true");
         props.put("mail.smtp.quitwait", "false");
-        props.put("mail.debug", "true");
+        // set true for more detailed error logs
+        props.put("mail.debug", "false");
 
         return mailSender;
     }
@@ -59,7 +60,6 @@ public class MailConfig {
     public TemplateEngine testTemplateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.addTemplateResolver(htmlTemplateResolver());
-//        templateEngine.setTemplateEngineMessageSource();
         return templateEngine;
     }
 

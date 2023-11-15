@@ -22,8 +22,8 @@ public class ConsumerService {
             try {
                 service.sendMail(info.getRecipientName(), info.getRecipientEmail(), Locale.ITALIAN);
             } catch (MessagingException e) {
-                // TODO manage exception
-                throw new RuntimeException(e);
+                // TODO doesn't work as expected but at least doesn't stop the application
+                LOGGER.error("Messaging Error: {}", e);
             }
             LOGGER.info("Received: {}", info);
         };

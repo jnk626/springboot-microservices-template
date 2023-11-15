@@ -34,7 +34,7 @@ public class MailService {
         final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
         message.setFrom(EMAIL_USERNAME);
         message.setTo(recipientEmail);
-        message.setSubject("Test");
+        message.setSubject("Welcome "+recipientName);
         final String htmlContent = this.engine.process("html/standard-mail.html", ctx);
         message.setText(htmlContent, true);
 
